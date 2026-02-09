@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BACCARAT PREDATOR 33M PLUS (Human Logic Edition)</title>
+    <style>
+        /* --- [ส่วนที่เพิ่มใหม่: ระบบควบคุมการเข้าถึง] --- */
+        #auth-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; font-family: sans-serif;
+        }
+        .auth-box {
+            background: #1a1a1a; padding: 30px; border-radius: 10px;
+            border: 1px solid #cfad41; text-align: center; box-shadow: 0 0 20px rgba(207,173,65,0.2);
+        }
+        .auth-box input {
+            padding: 10px; width: 200px; border-radius: 5px; border: 1px solid #333;
+            background: #000; color: #cfad41; text-align: center; font-size: 1.2rem; margin: 15px 0;
+        }
+        .auth-box button {
+            padding: 10px 25px; background: var(--active-m, #cfad41); border: none;
+            border-radius: 5px; cursor: pointer; font-weight: bold; color: #000;
+        }
+        #timer-display {
+            position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8);
+            border: 1px solid #cfad41; padding: 5px 10px; border-radius: 5px;
+            font-family: monospace; font-size: 14px; color: #cfad41; z-index: 9000;
+        }
+        /* ------------------------------------------- */
+
+        :root {
+            --p-color: #0066ff;
+            --b-color: #ff3333;
+            --wait-color: #444;
+            --bg-dark: #0a0a0a;
+            --active-m: #cfad41;
+            --gold-gradient: linear-gradient(to bottom, #cfad41 0%, #f7e08a 50%, #b8860b 100%);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            margin: 0; padding: 10px; overflow-x: hidden;
+        }
+
+        .header-title {
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.4rem; font-weight: 900;
+            margin: 10px 0; letter-spacing: 1px;
+            text-transform: uppercase; font-family: 'Arial Black', sans-serif;
+        }
+
+        .big-road-container {
+            width: 100%; max-width: 480px; height: 125px;
+            background: #000; border: 1px solid #333;
+            display: flex; overflow-x: auto; margin-bottom: 5px;
+        }
+        .big-road-container::-webkit-scrollbar { height: 6px; background: #111; }
+        .big-road-container::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+
+        .road-column { display: flex; flex-direction: column; min-width: 20px; border-right: 1px solid #1a1a1a; }
+        .road-cell { 
+            width: 20px; height: 20px; 
+            border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; justify-content: center; 
+        }
+        
+        .dot {
+            width: 15px; height: 15px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 8px; font-weight: bold; color: white;
+            box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+        }
+
+        .stat-bar {
+            width: 100%; max-width: 480px; display: flex; justify-content: space-around;
+            font-size: 0.75rem; color: #888; margin-bottom: 10px; padding: 2px 0;
+            border-bottom: 1px solid #222;
+        }
+        .stat-bar span b { color: #ccc; margin-left: 3px; }
+
+        .money-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+            width: 100%; max-width: 480px; margin-bottom: 10px;
+        }
+        .m-item {
+            background: #1a1a1a; border: 1px solid #333; padding: 6px;
+            border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; color: #999; gap: 5px; transition: all 0.3s;
+        }
+        .m-item.active {
+            border-color: var(--active-m);
+            background: rgba(207, 173, 65, 0.2);
+            box-shadow: 0 0 8px rgba(207, 173, 65, 0.3);
+            color: white;
+        }
+        .m-item input {
+            width: 55px; background: transparent; border: none; color: #f7e08a;
+            text-align: center; font-weight: bold; outline: none; font-size: 1rem;
+        }
+        .m-val { color: white; font-weight: bold; width: 55px; text-align: center; }
+
+        .chip-container { perspective: 1000px; margin: 10px 0; }
+        .chip {
+            width: 90px; height: 90px; position: relative; transform-style: preserve-3d;
+            animation: chipSpin 8s linear infinite;
+        }
+        .chip div {
+            position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: 900;
+            backface-visibility: hidden; border: 6px dashed rgba(255,255,255,0.2); box-sizing: border-box;
+            box-shadow: 0 0 15px rgba(0,0,0,0.8);
+        }
+        .chip .p-side { background: radial-gradient(circle, #0066ff, #002266); color: white; transform: rotateY(0deg); }
+        .chip .b-side { background: radial-gradient(circle, #ff3333, #660000); color: white; transform: rotateY(180deg); }
+        .chip.waiting div { background: radial-gradient(circle, #444, #111) !important; color: #888 !important; font-size: 1.2rem; }
+
+        @keyframes chipSpin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+
+        .btn-group { display: flex; gap: 8px; margin-bottom: 15px; }
+        .btn { padding: 10px 15px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; color: white; min-width: 75px; }
+        .btn-p { background: var(--p-color); box-shadow: 0 3px 0 #0033aa; }
+        .btn-b { background: var(--b-color); box-shadow: 0 3px 0 #aa0000; }
+        .btn-tool { background: #333; font-size: 0.8rem; }
+
+        .history-table { width: 100%; max-width: 480px; border-collapse: collapse; font-size: 0.8rem; background: #111; }
+        .history-table th, .history-table td { border: 1px solid #222; padding: 7px; text-align: center; }
+        .history-table th { color: #cfad41; background: #000; font-weight: normal; }
+        .win-row { background: rgba(0, 255, 0, 0.1) !important; color: #00ff00; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="auth-overlay">
+        <div class="auth-box">
+            <h2 style="color: #cfad41; margin-top: 0;">LICENSE REQUIRED</h2>
+            <p style="color: #888; font-size: 0.9rem;">กรุณากรอกรหัสผ่านเพื่อเริ่มใช้งาน (72 ชม.)</p>
+            <input type="password" id="pass-input" placeholder="SERIAL NUMBER">
+            <br>
+            <button onclick="checkAuth()">ACTIVATE</button>
+        </div>
+    </div>
+    <div id="timer-display" style="display:none;">Remaining: 72:00:00</div>
+    <div class="header-title">BACCARAT PREDATOR 33M PLUS</div>
+
+    <div class="big-road-container" id="bigRoad"></div>
+    
+    <div class="stat-bar">
+        <span>PLAYER: <b id="pCount">0</b></span>
+        <span>BANKER: <b id="bCount">0</b></span>
+        <span>TOTAL: <b id="tCount">0</b></span>
+    </div>
+
+    <div class="money-grid">
+        <div class="m-item" id="mBox1">M1:<input type="number" id="m1" value="100" onchange="calcM()" maxlength="4"></div>
+        <div class="m-item" id="mBox2">M2:<span id="v2" class="m-val">0</span></div>
+        <div class="m-item" id="mBox3">M3:<span id="v3" class="m-val">0</span></div>
+        <div class="m-item" id="mBox4">M4:<span id="v4" class="m-val">0</span></div>
+        <div class="m-item" id="mBox5">M5:<span id="v5" class="m-val">0</span></div>
+        <div class="m-item" id="mBox6">M6:<span id="v6" class="m-val">0</span></div>
+    </div>
+
+    <div class="chip-container">
+        <div class="chip" id="chip">
+            <div class="p-side" id="chipFront">P</div>
+            <div class="b-side" id="chipBack">B</div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-p" onclick="record('P')">PLAYER</button>
+        <button class="btn btn-b" onclick="record('B')">BANKER</button>
+        <button class="btn btn-tool" onclick="undo()">UNDO</button>
+        <button class="btn btn-tool" onclick="resetAll()">RESET</button>
+    </div>
+
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>ลำดับ</th>
+                <th>จดจริง</th>
+                <th>พยากรณ์</th>
+                <th>W / L</th>
+            </tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+    </table>
+
+    <script>
+        const LICENSE_KEY = "AZ-8899-X";
+        const TOTAL_SECONDS = 72 * 60 * 60; // 72 ชม.
+        let remainingTime = localStorage.getItem('predator_time') ? parseInt(localStorage.getItem('predator_time')) : TOTAL_SECONDS;
+        let isActive = localStorage.getItem('predator_active') === 'true';
+        let userIP = "";
+
+        // ดึง IP เบื้องต้น
+        fetch('https://api.ipify.org?format=json').then(r => r.json()).then(data => userIP = data.ip).catch(()=> userIP = "unknown");
+
+        function checkAuth() {
+            const input = document.getElementById('pass-input').value;
+            if (input === LICENSE_KEY) {
+                const storedIP = localStorage.getItem('predator_ip');
+                if (storedIP && storedIP !== userIP) {
+                    alert("รหัสนี้ถูกใช้ไปแล้วกับ IP อื่น");
+                    return;
+                }
+                localStorage.setItem('predator_active', 'true');
+                localStorage.setItem('predator_ip', userIP);
+                isActive = true;
+                startSystem();
+            } else {
+                alert("รหัสผ่านไม่ถูกต้อง");
+            }
+        }
+
+        function startSystem() {
+            document.getElementById('auth-overlay').style.display = 'none';
+            document.getElementById('timer-display').style.display = 'block';
+            runTimer();
+        }
+
+        function runTimer() {
+            const timerInterval = setInterval(() => {
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    document.body.innerHTML = "<div style='color:white; text-align:center; margin-top:100px;'><h1>หมดเวลาใช้งาน</h1><h2>โปรดติดต่อเจ้าของโปรแกรม</h2></div>";
+                    alert("โปรดติดต่อเจ้าของโปรแกรม");
+                    return;
+                }
+                remainingTime--;
+                localStorage.setItem('predator_time', remainingTime);
+                
+                const h = Math.floor(remainingTime / 3600);
+                const m = Math.floor((remainingTime % 3600) / 60);
+                const s = remainingTime % 60;
+                document.getElementById('timer-display').innerText = `Remaining: ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            }, 1000);
+        }
+
+        window.onload = function() {
+            if (isActive && remainingTime > 0) {
+                startSystem();
+            }
+        };
+    </script>
+
+    <script>
+        /* --- โค้ดเดิมของคุณทั้งหมด (ไม่มีการแก้ไข) --- */
+        let history = [];
+        let currentStep = 1;
+        const WINDOW_SIZE = 24;
+
+        function calcM() {
+            let m1 = parseInt(document.getElementById('m1').value) || 0;
+            if(m1 > 9999) m1 = 9999;
+            let m2 = m1 * 2; 
+            let steps = [m1, m2];
+            for(let i=2; i<6; i++) {
+                let accumulated = steps.reduce((a, b) => a + b, 0);
+                let nextStep = Math.ceil((accumulated + m1) / 0.95);
+                nextStep = Math.ceil(nextStep / 5) * 5; 
+                steps.push(nextStep);
+            }
+            for(let i=1; i<6; i++) document.getElementById('v' + (i+1)).innerText = steps[i].toLocaleString();
+        }
+        calcM();
+
+        function getPrediction() {
+            if (history.length < WINDOW_SIZE) return 'WAIT';
+            let windowData = history.slice(-WINDOW_SIZE);
+            let bits = windowData.map(x => (x.real === 'P' ? 1 : -1));
+            let last3 = bits.slice(-3);
+            let last2 = bits.slice(-2);
+            if (last3.every(v => v === last3[0])) { return last3[0] === 1 ? 'P' : 'B'; }
+            if (last3[0] !== last3[1] && last3[1] !== last3[2]) { return last3[2] === 1 ? 'B' : 'P'; }
+            let weightedSum = 0;
+            bits.forEach((bit, idx) => {
+                let weight = Math.pow(1.1, idx); 
+                weightedSum += bit * weight;
+            });
+            return weightedSum > 0 ? 'B' : 'P';
+        }
+
+        function record(val) {
+            let pred = getPrediction();
+            history.push({ real: val, pred: pred });
+            if (pred !== 'WAIT') {
+                if (val === pred) { currentStep = 1; } 
+                else { currentStep = currentStep < 6 ? currentStep + 1 : 1; }
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            renderBigRoad();
+            renderTable();
+            updateChip();
+            updateStats();
+            updateMoneyHighlight();
+        }
+
+        function updateMoneyHighlight() {
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById('mBox' + i).classList.remove('active');
+            }
+            if (getPrediction() !== 'WAIT') {
+                document.getElementById('mBox' + currentStep).classList.add('active');
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('pCount').innerText = history.filter(x => x.real === 'P').length;
+            document.getElementById('bCount').innerText = history.filter(x => x.real === 'B').length;
+            document.getElementById('tCount').innerText = history.length;
+        }
+
+        function renderBigRoad() {
+            const road = document.getElementById('bigRoad');
+            road.innerHTML = "";
+            let cols = [[]]; let lastVal = "";
+            history.forEach(item => {
+                if (lastVal === "" || (item.real === lastVal && cols[cols.length-1].length < 6)) {
+                    cols[cols.length-1].push(item.real);
+                } else { cols.push([item.real]); }
+                lastVal = item.real;
+            });
+            cols.forEach(col => {
+                let colDiv = document.createElement('div');
+                colDiv.className = 'road-column';
+                for(let i=0; i<6; i++) {
+                    let cell = document.createElement('div');
+                    cell.className = 'road-cell';
+                    if (col[i]) {
+                        let dot = document.createElement('div');
+                        dot.className = 'dot';
+                        dot.style.backgroundColor = col[i] === 'P' ? 'var(--p-color)' : 'var(--b-color)';
+                        dot.innerText = col[i];
+                        cell.appendChild(dot);
+                    }
+                    colDiv.appendChild(cell);
+                }
+                road.appendChild(colDiv);
+            });
+            road.scrollLeft = road.scrollWidth;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('logBody');
+            tbody.innerHTML = "";
+            history.slice().reverse().forEach((item, index) => {
+                let isWait = item.pred === 'WAIT';
+                let isWin = !isWait && item.real === item.pred;
+                tbody.innerHTML += `
+                    <tr class="${!isWait && isWin ? 'win-row' : ''}">
+                        <td>${history.length - index}</td>
+                        <td style="color:${item.real==='P'?'#0af':'#f44'}">${item.real}</td>
+                        <td style="color:${item.pred==='P'?'#0af':'#f44'}">${isWait ? '...' : item.pred}</td>
+                        <td>${isWait ? '-' : (isWin ? "WIN" : "LOSS")}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function updateChip() {
+            const pred = getPrediction();
+            const chip = document.getElementById('chip');
+            const f = document.getElementById('chipFront');
+            const b = document.getElementById('chipBack');
+            chip.style.animationDuration = "8s";
+            if (pred === 'WAIT') {
+                chip.classList.add('waiting');
+                f.innerText = "WAIT"; b.innerText = "WAIT";
+            } else {
+                chip.classList.remove('waiting');
+                f.innerText = pred; b.innerText = pred;
+                const color = pred === 'P' ? "radial-gradient(circle, #0066ff, #002266)" : "radial-gradient(circle, #ff3333, #660000)";
+                chip.querySelector('.p-side').style.background = color;
+                chip.querySelector('.b-side').style.background = color;
+            }
+        }
+
+        function undo() { 
+            if (history.length > 0) {
+                history.pop();
+                if (currentStep > 1) currentStep--; 
+            }
+            updateUI(); 
+        }
+        function resetAll() { if(confirm("ล้างข้อมูลทั้งหมด?")) { history = []; currentStep = 1; updateUI(); } }
+        updateUI();
+    </script>
+</body>
+</html>
